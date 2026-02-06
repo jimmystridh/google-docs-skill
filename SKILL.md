@@ -925,18 +925,29 @@ For creating and managing Excalidraw diagrams, see the `excalidraw-diagrams` ski
 
 ## Authentication Setup
 
-**Shared with Other Google Skills**:
-- Uses same OAuth credentials and token
-- Located at: `~/.claude/.google/client_secret.json` and `~/.claude/.google/token.json`
-- Shares token with email, calendar, contacts, drive, and sheets skills
-- Requires Documents, Drive, Sheets, Calendar, Contacts, and Gmail API scopes
+**Files**:
+- OAuth client JSON: `~/.claude/.google/client_secret.json`
+- Token (auto-created): `~/.claude/.google/token.json`
 
-**First Time Setup**:
-1. Run any docs operation
-2. Script will prompt for authorization URL
-3. Visit URL and authorize all Google services
-4. Enter authorization code when prompted
-5. Token stored for all Google skills
+**First Time Setup (Download or Source Checkout)**:
+1. Create Google Cloud OAuth credentials (OAuth Client ID: Desktop app) and enable:
+   - Google Drive API
+   - Google Docs API
+   - Google Sheets API
+2. Save the downloaded client JSON as `~/.claude/.google/client_secret.json`.
+3. Trigger the auth flow to get an authorization URL:
+   ```bash
+   scripts/drive_manager list --max-results 1
+   ```
+   If you are not authorized yet, the command prints a JSON error containing `auth_url`.
+4. Open `auth_url` in your browser, complete consent, and copy the authorization code.
+5. Store the token:
+   ```bash
+   scripts/docs_manager auth <code>
+   # or
+   scripts/sheets_manager auth <code>
+   ```
+6. Retry your original command.
 
 **Re-authorization**:
 - Token automatically refreshes when expired

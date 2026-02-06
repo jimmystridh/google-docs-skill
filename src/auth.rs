@@ -372,9 +372,10 @@ pub fn auth_required_payload(auth_url: &str, message: &str, script_hint: &str) -
       "auth_url": auth_url,
       "instructions": [
         "1. Visit the authorization URL",
-        "2. Grant access to Google Docs, Drive, Sheets, Calendar, Contacts, and Gmail",
+        "2. Grant access in your browser",
         "3. Copy the authorization code",
-        format!("4. Run: {script_hint} auth <code>")
+        format!("4. Run: {script_hint} auth <code>"),
+        "5. Retry the original command"
       ]
     })
 }

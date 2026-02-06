@@ -64,7 +64,7 @@ All three Google skills use standardized exit codes:
    - People API (if using contacts skill)
    - Gmail API (if using email skill)
 2. Check OAuth consent screen is configured
-3. Verify redirect URI is configured: `http://localhost:8080`
+3. Ensure you created an OAuth Client ID of type **Desktop app** (installed application flow). This skill uses the out-of-band redirect URI `urn:ietf:wg:oauth:2.0:oob` to obtain an authorization code.
 4. Download fresh credentials from Google Cloud Console
 5. Delete existing token: `rm ~/.claude/.google/token.json`
 6. Run any Google skill operation to trigger re-authorization

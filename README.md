@@ -38,6 +38,8 @@ scripts/drive_manager --help
 scripts/sheets_manager --help
 ```
 
+On Windows, the release archives also include `scripts\\docs_manager.cmd`, `scripts\\drive_manager.cmd`, and `scripts\\sheets_manager.cmd`.
+
 Compatibility wrappers are also included for existing references:
 
 ```bash
@@ -62,10 +64,22 @@ npx skills add https://github.com/jimmystridh/google-docs-rust --skill google-do
 
 ## Auth setup
 
-1. Create Google Cloud OAuth Desktop credentials.
-2. Save client secret JSON to:
+1. Create Google Cloud OAuth Desktop credentials (OAuth Client ID: **Desktop app**).
+2. Enable the APIs in your Google Cloud project:
+   - Google Drive API
+   - Google Docs API
+   - Google Sheets API
+3. Save the downloaded OAuth client JSON to:
    - `~/.claude/.google/client_secret.json`
-3. Complete auth once:
+4. Trigger the auth flow once to get an authorization URL:
+
+```bash
+scripts/drive_manager list --max-results 1
+```
+
+If you are not authorized yet, you will get a JSON error containing `auth_url`. Open that URL in your browser and complete the consent flow to get an authorization code.
+
+5. Complete auth by storing the token:
 
 ```bash
 scripts/docs_manager auth <code>
@@ -73,7 +87,7 @@ scripts/docs_manager auth <code>
 scripts/sheets_manager auth <code>
 ```
 
-Drive commands use the same shared token and do not have a separate `auth` command.
+Tokens are stored at `~/.claude/.google/token.json`. Drive commands use the same shared token and do not have a separate `auth` command.
 
 ## Validation
 

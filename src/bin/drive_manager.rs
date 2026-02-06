@@ -397,7 +397,7 @@ enum CommandError {
     Operation { error_code: String, message: String },
 }
 
-fn initialize_client(program: &str) -> std::result::Result<GoogleClient, i32> {
+fn initialize_client(_program: &str) -> std::result::Result<GoogleClient, i32> {
     let home = match home_dir() {
         Ok(home) => home,
         Err(err) => {
@@ -427,7 +427,7 @@ fn initialize_client(program: &str) -> std::result::Result<GoogleClient, i32> {
             print_json(&auth_required_payload(
                 &auth_url,
                 "Authorization required. Please use docs_manager auth flow.",
-                program,
+                "docs_manager",
             ));
             Err(EXIT_AUTH_ERROR)
         }
@@ -440,7 +440,7 @@ fn initialize_client(program: &str) -> std::result::Result<GoogleClient, i32> {
                 print_json(&auth_required_payload(
                     &url,
                     "Authorization required. Please use docs_manager auth flow.",
-                    program,
+                    "docs_manager",
                 ));
             } else {
                 print_json(&json!({
