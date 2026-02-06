@@ -135,7 +135,9 @@ impl GoogleClient {
         mime_type: &str,
         file_name: &str,
     ) -> std::result::Result<Value, GoogleApiError> {
-        let metadata_part = multipart::Part::text(metadata.to_string()).mime_str("application/json").map_err(|e| GoogleApiError::Parse(e.to_string()))?;
+        let metadata_part = multipart::Part::text(metadata.to_string())
+            .mime_str("application/json")
+            .map_err(|e| GoogleApiError::Parse(e.to_string()))?;
         let file_bytes = fs::read(file_path).map_err(|e| GoogleApiError::Network(e.to_string()))?;
         let file_part = multipart::Part::bytes(file_bytes)
             .file_name(file_name.to_string())
@@ -167,7 +169,9 @@ impl GoogleClient {
         mime_type: &str,
         file_name: &str,
     ) -> std::result::Result<Value, GoogleApiError> {
-        let metadata_part = multipart::Part::text(metadata.to_string()).mime_str("application/json").map_err(|e| GoogleApiError::Parse(e.to_string()))?;
+        let metadata_part = multipart::Part::text(metadata.to_string())
+            .mime_str("application/json")
+            .map_err(|e| GoogleApiError::Parse(e.to_string()))?;
         let file_bytes = fs::read(file_path).map_err(|e| GoogleApiError::Network(e.to_string()))?;
         let file_part = multipart::Part::bytes(file_bytes)
             .file_name(file_name.to_string())
@@ -264,11 +268,7 @@ pub fn extract_google_error_message(body: &str) -> Option<String> {
 
 pub fn map_api_error(operation: &str, err: &GoogleApiError) -> Value {
     match err {
-        GoogleApiError::Api {
-            message,
-            body,
-            ..
-        } => {
+        GoogleApiError::Api { message, body, .. } => {
             serde_json::json!({
                 "status": "error",
                 "error_code": "API_ERROR",

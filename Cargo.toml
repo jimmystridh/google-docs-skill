@@ -26,3 +26,9 @@ path = "src/bin/drive_manager.rs"
 [[bin]]
 name = "sheets_manager"
 path = "src/bin/sheets_manager.rs"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true
+panic = "abort"

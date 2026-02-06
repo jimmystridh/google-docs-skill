@@ -1,7 +1,8 @@
 use anyhow::{Context, Result};
 use google_docs_rust::auth::{
     AuthPaths, SHARED_SCOPES, TokenState, auth_required_payload, build_auth_url,
-    complete_authorization, ensure_token, load_oauth_client_config, load_stored_token, save_stored_token,
+    complete_authorization, ensure_token, load_oauth_client_config, load_stored_token,
+    save_stored_token,
 };
 use google_docs_rust::google_api::{GoogleApiError, GoogleClient, map_api_error};
 use google_docs_rust::io_helpers::{home_dir, print_json, read_stdin_json};
@@ -93,7 +94,10 @@ fn main() {
         std::process::exit(EXIT_SUCCESS);
     }
 
-    let client = match initialize_client(&program, "Authorization required. Please visit the URL and enter the code.") {
+    let client = match initialize_client(
+        &program,
+        "Authorization required. Please visit the URL and enter the code.",
+    ) {
         Ok(client) => client,
         Err(exit_code) => std::process::exit(exit_code),
     };
@@ -135,127 +139,105 @@ fn main() {
                 }
             }
         }
-        "insert" => {
-            dispatch_json_command("insert", || {
-                let input = read_stdin_json()?;
-                let document_id = required_string(&input, "document_id")?;
-                let text = required_string(&input, "text")?;
-                let index = input.get("index").and_then(value_to_i64).unwrap_or(1);
-                insert_text(&client, &document_id, &text, index)
-            })
-        }
-        "append" => {
-            dispatch_json_command("append", || {
-                let input = read_stdin_json()?;
-                let document_id = required_string(&input, "document_id")?;
-                let text = required_string(&input, "text")?;
-                append_text(&client, &document_id, &text)
-            })
-        }
-        "replace" => {
-            dispatch_json_command("replace", || {
-                let input = read_stdin_json()?;
-                let document_id = required_string(&input, "document_id")?;
-                let find = required_string(&input, "find")?;
-                let replace = required_string(&input, "replace")?;
-                let match_case = input
-                    .get("match_case")
-                    .and_then(|v| v.as_bool())
-                    .unwrap_or(false);
-                replace_text(&client, &document_id, &find, &replace, match_case)
-            })
-        }
-        "format" => {
-            dispatch_json_command("format", || {
-                let input = read_stdin_json()?;
-                let document_id = required_string(&input, "document_id")?;
-                let start_index = required_i64(&input, "start_index")?;
-                let end_index = required_i64(&input, "end_index")?;
-                let bold = input.get("bold").and_then(|v| v.as_bool());
-                let italic = input.get("italic").and_then(|v| v.as_bool());
-                let underline = input.get("underline").and_then(|v| v.as_bool());
-                format_text(
-                    &client,
-                    &document_id,
-                    start_index,
-                    end_index,
-                    bold,
-                    italic,
-                    underline,
-                )
-            })
-        }
-        "page-break" => {
-            dispatch_json_command("page_break", || {
-                let input = read_stdin_json()?;
-                let document_id = required_string(&input, "document_id")?;
-                let index = required_i64(&input, "index")?;
-                insert_page_break(&client, &document_id, index)
-            })
-        }
-        "create" => {
-            dispatch_json_command("create", || {
-                let input = read_stdin_json()?;
-                let title = required_string(&input, "title")?;
-                let content = input
-                    .get("content")
-                    .and_then(|v| v.as_str())
-                    .map(ToString::to_string);
-                create_document(&client, &title, content)
-            })
-        }
-        "create-from-markdown" => {
-            dispatch_json_command("create_from_markdown", || {
-                let input = read_stdin_json()?;
-                let title = required_string(&input, "title")?;
-                let markdown = required_string(&input, "markdown")?;
-                create_from_markdown(&client, &title, &markdown)
-            })
-        }
-        "insert-from-markdown" => {
-            dispatch_json_command("insert_from_markdown", || {
-                let input = read_stdin_json()?;
-                let document_id = required_string(&input, "document_id")?;
-                let markdown = required_string(&input, "markdown")?;
-                let index = input.get("index").and_then(value_to_i64);
-                insert_from_markdown(&client, &document_id, &markdown, index)
-            })
-        }
-        "delete" => {
-            dispatch_json_command("delete", || {
-                let input = read_stdin_json()?;
-                let document_id = required_string(&input, "document_id")?;
-                let start_index = required_i64(&input, "start_index")?;
-                let end_index = required_i64(&input, "end_index")?;
-                delete_content(&client, &document_id, start_index, end_index)
-            })
-        }
-        "insert-image" => {
-            dispatch_json_command("insert_image", || {
-                let input = read_stdin_json()?;
-                let document_id = required_string(&input, "document_id")?;
-                let image_url = required_string(&input, "image_url")?;
-                let index = input.get("index").and_then(value_to_i64);
-                let width = input.get("width").and_then(value_to_f64);
-                let height = input.get("height").and_then(value_to_f64);
-                insert_image(&client, &document_id, &image_url, index, width, height)
-            })
-        }
-        "insert-table" => {
-            dispatch_json_command("insert_table", || {
-                let input = read_stdin_json()?;
-                let document_id = required_string(&input, "document_id")?;
-                let rows = required_i64(&input, "rows")?;
-                let cols = required_i64(&input, "cols")?;
-                let index = input.get("index").and_then(value_to_i64);
-                let data = input
-                    .get("data")
-                    .and_then(|v| v.as_array())
-                    .cloned()
-                    .unwrap_or_default();
-                insert_table(&client, &document_id, rows, cols, index, &data)
-            })
-        }
+        "insert" => dispatch_json_command("insert", || {
+            let input = read_stdin_json()?;
+            let document_id = required_string(&input, "document_id")?;
+            let text = required_string(&input, "text")?;
+            let index = input.get("index").and_then(value_to_i64).unwrap_or(1);
+            insert_text(&client, &document_id, &text, index)
+        }),
+        "append" => dispatch_json_command("append", || {
+            let input = read_stdin_json()?;
+            let document_id = required_string(&input, "document_id")?;
+            let text = required_string(&input, "text")?;
+            append_text(&client, &document_id, &text)
+        }),
+        "replace" => dispatch_json_command("replace", || {
+            let input = read_stdin_json()?;
+            let document_id = required_string(&input, "document_id")?;
+            let find = required_string(&input, "find")?;
+            let replace = required_string(&input, "replace")?;
+            let match_case = input
+                .get("match_case")
+                .and_then(|v| v.as_bool())
+                .unwrap_or(false);
+            replace_text(&client, &document_id, &find, &replace, match_case)
+        }),
+        "format" => dispatch_json_command("format", || {
+            let input = read_stdin_json()?;
+            let document_id = required_string(&input, "document_id")?;
+            let start_index = required_i64(&input, "start_index")?;
+            let end_index = required_i64(&input, "end_index")?;
+            let bold = input.get("bold").and_then(|v| v.as_bool());
+            let italic = input.get("italic").and_then(|v| v.as_bool());
+            let underline = input.get("underline").and_then(|v| v.as_bool());
+            format_text(
+                &client,
+                &document_id,
+                start_index,
+                end_index,
+                bold,
+                italic,
+                underline,
+            )
+        }),
+        "page-break" => dispatch_json_command("page_break", || {
+            let input = read_stdin_json()?;
+            let document_id = required_string(&input, "document_id")?;
+            let index = required_i64(&input, "index")?;
+            insert_page_break(&client, &document_id, index)
+        }),
+        "create" => dispatch_json_command("create", || {
+            let input = read_stdin_json()?;
+            let title = required_string(&input, "title")?;
+            let content = input
+                .get("content")
+                .and_then(|v| v.as_str())
+                .map(ToString::to_string);
+            create_document(&client, &title, content)
+        }),
+        "create-from-markdown" => dispatch_json_command("create_from_markdown", || {
+            let input = read_stdin_json()?;
+            let title = required_string(&input, "title")?;
+            let markdown = required_string(&input, "markdown")?;
+            create_from_markdown(&client, &title, &markdown)
+        }),
+        "insert-from-markdown" => dispatch_json_command("insert_from_markdown", || {
+            let input = read_stdin_json()?;
+            let document_id = required_string(&input, "document_id")?;
+            let markdown = required_string(&input, "markdown")?;
+            let index = input.get("index").and_then(value_to_i64);
+            insert_from_markdown(&client, &document_id, &markdown, index)
+        }),
+        "delete" => dispatch_json_command("delete", || {
+            let input = read_stdin_json()?;
+            let document_id = required_string(&input, "document_id")?;
+            let start_index = required_i64(&input, "start_index")?;
+            let end_index = required_i64(&input, "end_index")?;
+            delete_content(&client, &document_id, start_index, end_index)
+        }),
+        "insert-image" => dispatch_json_command("insert_image", || {
+            let input = read_stdin_json()?;
+            let document_id = required_string(&input, "document_id")?;
+            let image_url = required_string(&input, "image_url")?;
+            let index = input.get("index").and_then(value_to_i64);
+            let width = input.get("width").and_then(value_to_f64);
+            let height = input.get("height").and_then(value_to_f64);
+            insert_image(&client, &document_id, &image_url, index, width, height)
+        }),
+        "insert-table" => dispatch_json_command("insert_table", || {
+            let input = read_stdin_json()?;
+            let document_id = required_string(&input, "document_id")?;
+            let rows = required_i64(&input, "rows")?;
+            let cols = required_i64(&input, "cols")?;
+            let index = input.get("index").and_then(value_to_i64);
+            let data = input
+                .get("data")
+                .and_then(|v| v.as_array())
+                .cloned()
+                .unwrap_or_default();
+            insert_table(&client, &document_id, rows, cols, index, &data)
+        }),
         _ => {
             print_json(&json!({
                 "status": "error",
@@ -323,11 +305,7 @@ fn initialize_client(program: &str, auth_message: &str) -> std::result::Result<G
 
     match ensure_token(&paths, SHARED_SCOPES) {
         Ok(TokenState::AuthorizationRequired { auth_url }) => {
-            print_json(&auth_required_payload(
-                &auth_url,
-                auth_message,
-                program,
-            ));
+            print_json(&auth_required_payload(&auth_url, auth_message, program));
             Err(EXIT_AUTH_ERROR)
         }
         Ok(TokenState::Authorized(token)) => match GoogleClient::new(token.access_token) {
@@ -441,7 +419,10 @@ fn value_to_f64(value: &Value) -> Option<f64> {
     }
 }
 
-fn read_document(client: &GoogleClient, document_id: &str) -> std::result::Result<Value, GoogleApiError> {
+fn read_document(
+    client: &GoogleClient,
+    document_id: &str,
+) -> std::result::Result<Value, GoogleApiError> {
     let document = get_document(client, document_id)?;
     let content = document
         .get("body")
@@ -460,7 +441,10 @@ fn read_document(client: &GoogleClient, document_id: &str) -> std::result::Resul
     }))
 }
 
-fn get_structure(client: &GoogleClient, document_id: &str) -> std::result::Result<Value, GoogleApiError> {
+fn get_structure(
+    client: &GoogleClient,
+    document_id: &str,
+) -> std::result::Result<Value, GoogleApiError> {
     let document = get_document(client, document_id)?;
     let mut structure = Vec::new();
 
@@ -510,12 +494,7 @@ fn get_structure(client: &GoogleClient, document_id: &str) -> std::result::Resul
     }))
 }
 
-fn insert_text(
-    client: &GoogleClient,
-    document_id: &str,
-    text: &str,
-    index: i64,
-) -> Result<Value> {
+fn insert_text(client: &GoogleClient, document_id: &str, text: &str, index: i64) -> Result<Value> {
     let requests = vec![json!({
         "insertText": {
             "location": { "index": index },
@@ -723,7 +702,11 @@ fn insert_image(
 
 fn create_document(client: &GoogleClient, title: &str, content: Option<String>) -> Result<Value> {
     let result = client
-        .post_json("https://docs.googleapis.com/v1/documents", &[], &json!({"title": title}))
+        .post_json(
+            "https://docs.googleapis.com/v1/documents",
+            &[],
+            &json!({"title": title}),
+        )
         .map_err(anyhow::Error::from)?;
 
     let document_id = result
@@ -917,7 +900,11 @@ fn insert_table_internal(
 
 fn create_from_markdown(client: &GoogleClient, title: &str, markdown: &str) -> Result<Value> {
     let create = client
-        .post_json("https://docs.googleapis.com/v1/documents", &[], &json!({"title": title}))
+        .post_json(
+            "https://docs.googleapis.com/v1/documents",
+            &[],
+            &json!({"title": title}),
+        )
         .map_err(anyhow::Error::from)?;
 
     let document_id = create
@@ -1075,7 +1062,8 @@ fn parse_markdown(markdown: &str) -> ParsedMarkdown {
         } else if line.starts_with("- [ ] ") || line.starts_with("* [ ] ") {
             let item = &line[6..];
             let prefix = "☐ ";
-            let processed = process_inline_formatting(item, current_index + char_len(prefix), &mut formats);
+            let processed =
+                process_inline_formatting(item, current_index + char_len(prefix), &mut formats);
             let rendered = format!("{prefix}{processed}\n");
             text.push_str(&rendered);
             current_index += char_len(&rendered);
@@ -1086,19 +1074,22 @@ fn parse_markdown(markdown: &str) -> ParsedMarkdown {
         {
             let item = &line[6..];
             let prefix = "☑ ";
-            let processed = process_inline_formatting(item, current_index + char_len(prefix), &mut formats);
+            let processed =
+                process_inline_formatting(item, current_index + char_len(prefix), &mut formats);
             let rendered = format!("{prefix}{processed}\n");
             text.push_str(&rendered);
             current_index += char_len(&rendered);
         } else if let Some(item) = line.strip_prefix("- ").or_else(|| line.strip_prefix("* ")) {
             let prefix = "• ";
-            let processed = process_inline_formatting(item, current_index + char_len(prefix), &mut formats);
+            let processed =
+                process_inline_formatting(item, current_index + char_len(prefix), &mut formats);
             let rendered = format!("{prefix}{processed}\n");
             text.push_str(&rendered);
             current_index += char_len(&rendered);
         } else if let Some((num, item)) = parse_numbered_list_item(line) {
             let prefix = format!("{num}. ");
-            let processed = process_inline_formatting(&item, current_index + char_len(&prefix), &mut formats);
+            let processed =
+                process_inline_formatting(&item, current_index + char_len(&prefix), &mut formats);
             let rendered = format!("{prefix}{processed}\n");
             text.push_str(&rendered);
             current_index += char_len(&rendered);
@@ -1313,7 +1304,10 @@ fn value_to_string(value: &Value) -> String {
     }
 }
 
-fn get_document(client: &GoogleClient, document_id: &str) -> std::result::Result<Value, GoogleApiError> {
+fn get_document(
+    client: &GoogleClient,
+    document_id: &str,
+) -> std::result::Result<Value, GoogleApiError> {
     let url = format!("https://docs.googleapis.com/v1/documents/{document_id}");
     client.get_json(&url, &[])
 }

@@ -1,7 +1,8 @@
 use anyhow::{Context, Result};
 use google_docs_rust::auth::{
     AuthPaths, SHARED_SCOPES, TokenState, auth_required_payload, build_auth_url,
-    complete_authorization, ensure_token, load_oauth_client_config, load_stored_token, save_stored_token,
+    complete_authorization, ensure_token, load_oauth_client_config, load_stored_token,
+    save_stored_token,
 };
 use google_docs_rust::google_api::{GoogleApiError, GoogleClient, map_api_error};
 use google_docs_rust::io_helpers::{home_dir, print_json, read_stdin_json};
@@ -266,7 +267,14 @@ fn main() {
             let start_col = required_i64(&input, "start_col")?;
             let end_col = required_i64(&input, "end_col")?;
             let width = required_i64(&input, "width")?;
-            set_column_width(&client, &spreadsheet_id, sheet_id, start_col, end_col, width)
+            set_column_width(
+                &client,
+                &spreadsheet_id,
+                sheet_id,
+                start_col,
+                end_col,
+                width,
+            )
         }),
         "set-row-height" => dispatch_json_command("set-row-height", || {
             let input = read_stdin_json()?;
@@ -275,7 +283,14 @@ fn main() {
             let start_row = required_i64(&input, "start_row")?;
             let end_row = required_i64(&input, "end_row")?;
             let height = required_i64(&input, "height")?;
-            set_row_height(&client, &spreadsheet_id, sheet_id, start_row, end_row, height)
+            set_row_height(
+                &client,
+                &spreadsheet_id,
+                sheet_id,
+                start_row,
+                end_row,
+                height,
+            )
         }),
         "add-filter" => dispatch_json_command("add-filter", || {
             let input = read_stdin_json()?;
@@ -291,7 +306,14 @@ fn main() {
             let range = required_string(&input, "range")?;
             let chart_type = required_string(&input, "chart_type")?;
             let title = required_string(&input, "title")?;
-            add_chart(&client, &spreadsheet_id, sheet_id, &range, &chart_type, &title)
+            add_chart(
+                &client,
+                &spreadsheet_id,
+                sheet_id,
+                &range,
+                &chart_type,
+                &title,
+            )
         }),
         "protect-range" => dispatch_json_command("protect-range", || {
             let input = read_stdin_json()?;
@@ -564,7 +586,11 @@ fn create_spreadsheet(
     }
 
     let result = client
-        .post_json("https://sheets.googleapis.com/v4/spreadsheets", &[], &spreadsheet)
+        .post_json(
+            "https://sheets.googleapis.com/v4/spreadsheets",
+            &[],
+            &spreadsheet,
+        )
         .map_err(anyhow::Error::from)?;
 
     let spreadsheet_id = result
@@ -1463,9 +1489,7 @@ fn batch_update_spreadsheet(
     let payload = json!({"requests": requests});
     client
         .post_json(
-            &format!(
-                "https://sheets.googleapis.com/v4/spreadsheets/{spreadsheet_id}:batchUpdate"
-            ),
+            &format!("https://sheets.googleapis.com/v4/spreadsheets/{spreadsheet_id}:batchUpdate"),
             &[],
             &payload,
         )
@@ -1493,7 +1517,10 @@ fn parse_a1_to_grid_range(range: &str, sheet_id: i64) -> Value {
             grid.insert("startRowIndex".to_string(), Value::Number(row.into()));
         }
         if let Some(col) = end_col {
-            grid.insert("endColumnIndex".to_string(), Value::Number((col + 1).into()));
+            grid.insert(
+                "endColumnIndex".to_string(),
+                Value::Number((col + 1).into()),
+            );
         }
         if let Some(row) = end_row {
             grid.insert("endRowIndex".to_string(), Value::Number((row + 1).into()));
@@ -1502,7 +1529,10 @@ fn parse_a1_to_grid_range(range: &str, sheet_id: i64) -> Value {
         let (col, row) = parse_cell_ref(cell_range);
         if let Some(col) = col {
             grid.insert("startColumnIndex".to_string(), Value::Number(col.into()));
-            grid.insert("endColumnIndex".to_string(), Value::Number((col + 1).into()));
+            grid.insert(
+                "endColumnIndex".to_string(),
+                Value::Number((col + 1).into()),
+            );
         }
         if let Some(row) = row {
             grid.insert("startRowIndex".to_string(), Value::Number(row.into()));
@@ -1742,10 +1772,7 @@ fn build_conditional_format_rule(
 
         let mut format = Map::new();
         if let Some(bg) = params.get("format_background_color") {
-            format.insert(
-                "backgroundColorStyle".to_string(),
-                json!({"rgbColor": bg}),
-            );
+            format.insert("backgroundColorStyle".to_string(), json!({"rgbColor": bg}));
         }
 
         let mut text_format = Map::new();
@@ -1755,10 +1782,7 @@ fn build_conditional_format_rule(
             text_format.insert("bold".to_string(), Value::Bool(true));
         }
         if let Some(fg) = params.get("format_foreground_color") {
-            text_format.insert(
-                "foregroundColorStyle".to_string(),
-                json!({"rgbColor": fg}),
-            );
+            text_format.insert("foregroundColorStyle".to_string(), json!({"rgbColor": fg}));
         }
         if !text_format.is_empty() {
             format.insert("textFormat".to_string(), Value::Object(text_format));

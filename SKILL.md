@@ -1,6 +1,6 @@
 ---
-name: google-docs
-description: Manage Google Docs, Google Sheets, and Google Drive with full document operations, spreadsheet editing, and file management. Includes Markdown support for creating formatted documents with headings, bold, italic, lists, tables, and checkboxes. Also supports Drive operations (upload, download, share, search) and comprehensive Sheets operations (read, write, format, charts, formulas).
+name: google-docs-rust
+description: Rust implementation of Google Docs, Google Sheets, and Google Drive management with full document operations, spreadsheet editing, and file workflows. Includes Markdown support for headings, bold, italic, lists, tables, and checkboxes plus Drive upload/download/share/search and advanced Sheets operations.
 category: productivity
 version: 2.0.0
 key_capabilities: create-from-markdown, insert-from-markdown, tables, formatted text, Drive upload/download/share/search, sheets
@@ -52,9 +52,12 @@ Manage Google Docs documents, Google Sheets spreadsheets, and Google Drive files
 
 ## Prerequisites
 
-**Rust**: Requires a recent Rust toolchain with Cargo.
+Two install modes are supported:
 
-**Build artifacts**: The wrapper scripts run the Rust binaries through Cargo:
+- **Source checkout**: Requires a recent Rust toolchain with Cargo.
+- **Release archive**: Uses prebuilt binaries, no local Rust toolchain required.
+
+For source checkouts, validate once before first use:
 ```bash
 cd ~/.claude/skills/google-docs-rust
 cargo check --offline
@@ -1237,7 +1240,11 @@ echo '{"spreadsheet_id":"abc123"}' | scripts/sheets_manager get-metadata
 
 ---
 
-**Dependencies**: Rust + Cargo. Build/validate once before first use:
+**Dependencies**:
+- Source checkout: Rust + Cargo
+- Release archive: none (prebuilt binaries)
+
+Source checkout validation:
 
 ```bash
 cargo check --offline

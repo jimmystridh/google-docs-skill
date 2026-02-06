@@ -46,6 +46,20 @@ scripts/drive_manager.rb --help
 scripts/sheets_manager.rb --help
 ```
 
+## Install as a skill
+
+Install directly from GitHub with the community `skills` CLI:
+
+```bash
+npx skills add jimmystridh/google-docs-rust --skill google-docs-rust -g -a claude-code -y
+```
+
+Repository URL also works:
+
+```bash
+npx skills add https://github.com/jimmystridh/google-docs-rust --skill google-docs-rust -g -a claude-code -y
+```
+
 ## Auth setup
 
 1. Create Google Cloud OAuth Desktop credentials.
@@ -69,6 +83,32 @@ This port was validated with:
 cargo check --offline
 cargo clippy --offline --all-targets --all-features
 ```
+
+## Release Matrix
+
+Tag pushes (`v*`) trigger `.github/workflows/release.yml`, which builds and publishes archives for:
+
+- `x86_64-unknown-linux-musl`
+- `aarch64-unknown-linux-musl`
+- `x86_64-pc-windows-msvc`
+- `aarch64-pc-windows-msvc`
+- `x86_64-apple-darwin`
+- `aarch64-apple-darwin`
+
+Each archive contains:
+
+- `bin/docs_manager`, `bin/drive_manager`, `bin/sheets_manager` (or `.exe` on Windows)
+- runnable wrappers under `scripts/`
+- `SKILL.md`, `README.md`, `LICENSE`, `examples/`, `references/`
+
+Release process:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+The release workflow uploads archives that can be used directly by agents without a local Rust toolchain.
 
 ## License
 

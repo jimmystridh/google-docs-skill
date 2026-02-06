@@ -74,7 +74,10 @@ fn main() {
                     print_json(&map_api_error("upload", &err));
                     EXIT_API_ERROR
                 }
-                Err(CommandError::Operation { error_code, message }) => {
+                Err(CommandError::Operation {
+                    error_code,
+                    message,
+                }) => {
                     print_json(&json!({
                         "status": "error",
                         "error_code": error_code,
@@ -112,7 +115,10 @@ fn main() {
                     print_json(&map_api_error("download", &err));
                     EXIT_API_ERROR
                 }
-                Err(CommandError::Operation { error_code, message }) => {
+                Err(CommandError::Operation {
+                    error_code,
+                    message,
+                }) => {
                     print_json(&json!({
                         "status": "error",
                         "error_code": error_code,
@@ -358,7 +364,10 @@ fn main() {
                     print_json(&map_api_error("update", &err));
                     EXIT_API_ERROR
                 }
-                Err(CommandError::Operation { error_code, message }) => {
+                Err(CommandError::Operation {
+                    error_code,
+                    message,
+                }) => {
                     print_json(&json!({
                         "status": "error",
                         "error_code": error_code,
@@ -662,15 +671,16 @@ fn export_google_doc(
     source_mime: &str,
     export_mime: Option<&str>,
 ) -> std::result::Result<Value, CommandError> {
-    let selected_export = export_mime
-        .map(ToString::to_string)
-        .unwrap_or_else(|| match source_mime {
-            "application/vnd.google-apps.document" => "application/pdf".to_string(),
-            "application/vnd.google-apps.spreadsheet" => "text/csv".to_string(),
-            "application/vnd.google-apps.presentation" => "application/pdf".to_string(),
-            "application/vnd.google-apps.drawing" => "image/png".to_string(),
-            _ => "application/pdf".to_string(),
-        });
+    let selected_export =
+        export_mime
+            .map(ToString::to_string)
+            .unwrap_or_else(|| match source_mime {
+                "application/vnd.google-apps.document" => "application/pdf".to_string(),
+                "application/vnd.google-apps.spreadsheet" => "text/csv".to_string(),
+                "application/vnd.google-apps.presentation" => "application/pdf".to_string(),
+                "application/vnd.google-apps.drawing" => "image/png".to_string(),
+                _ => "application/pdf".to_string(),
+            });
 
     client
         .get_bytes_to_path(
@@ -802,7 +812,10 @@ fn search_files(
     }))
 }
 
-fn get_metadata(client: &GoogleClient, file_id: &str) -> std::result::Result<Value, GoogleApiError> {
+fn get_metadata(
+    client: &GoogleClient,
+    file_id: &str,
+) -> std::result::Result<Value, GoogleApiError> {
     let file = client.get_json(
         &format!("https://www.googleapis.com/drive/v3/files/{file_id}"),
         &[ (
@@ -881,7 +894,7 @@ fn create_folder(
 
     let result = client.post_json(
         "https://www.googleapis.com/drive/v3/files",
-        &[ (
+        &[(
             "fields".to_string(),
             "id,name,mimeType,webViewLink,parents,createdTime".to_string(),
         )],
@@ -971,7 +984,7 @@ fn share_file(
 
     let created = client.post_json(
         &format!("https://www.googleapis.com/drive/v3/files/{file_id}/permissions"),
-        &[ (
+        &[(
             "fields".to_string(),
             "id,type,role,emailAddress".to_string(),
         )],
@@ -980,7 +993,7 @@ fn share_file(
 
     let file = client.get_json(
         &format!("https://www.googleapis.com/drive/v3/files/{file_id}"),
-        &[ (
+        &[(
             "fields".to_string(),
             "webViewLink,webContentLink".to_string(),
         )],
@@ -1048,7 +1061,7 @@ fn copy_file(
 
     let result = client.post_json(
         &format!("https://www.googleapis.com/drive/v3/files/{file_id}/copy"),
-        &[ (
+        &[(
             "fields".to_string(),
             "id,name,mimeType,webViewLink,parents,createdTime".to_string(),
         )],

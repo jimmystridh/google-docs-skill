@@ -241,11 +241,8 @@ pub fn complete_authorization(
         return Err(anyhow!("{msg}"));
     }
 
-    let payload: TokenResponse = serde_json::from_str(&body).with_context(|| {
-        format!(
-            "Failed parsing token exchange response JSON. Body: {body}"
-        )
-    })?;
+    let payload: TokenResponse = serde_json::from_str(&body)
+        .with_context(|| format!("Failed parsing token exchange response JSON. Body: {body}"))?;
 
     let refresh_token = payload
         .refresh_token
@@ -322,11 +319,8 @@ pub fn refresh_token(config: &OAuthClientConfig, token: &mut StoredToken) -> Res
         return Err(anyhow!("{msg}"));
     }
 
-    let payload: TokenResponse = serde_json::from_str(&body).with_context(|| {
-        format!(
-            "Failed parsing refresh token response JSON. Body: {body}"
-        )
-    })?;
+    let payload: TokenResponse = serde_json::from_str(&body)
+        .with_context(|| format!("Failed parsing refresh token response JSON. Body: {body}"))?;
 
     token.access_token = payload.access_token;
     token.expiration_time_millis = compute_expiration(payload.expires_in);
