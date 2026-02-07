@@ -72,6 +72,16 @@ cd .\\google-docs-skill-vX.Y.Z-x86_64-pc-windows-msvc
 .\\scripts\\drive_manager.cmd --help
 ```
 
+### macOS Gatekeeper (Quarantine)
+
+If you downloaded the archive using a browser and macOS blocks running the binaries, remove the quarantine attribute from the extracted directory:
+
+```bash
+xattr -dr com.apple.quarantine google-docs-skill-vX.Y.Z-aarch64-apple-darwin
+```
+
+Alternatively, downloading via `gh release download` or `curl` typically avoids Gatekeeper quarantine on the extracted files.
+
 ## Install as a skill
 
 Install directly from GitHub with the community `skills` CLI:
