@@ -26,7 +26,7 @@ for bin in "${required_bins[@]}"; do
   fi
 done
 
-PKG_NAME="google-docs-rust-${VERSION}-${TARGET}"
+PKG_NAME="google-docs-skill-${VERSION}-${TARGET}"
 PKG_ROOT="${ROOT_DIR}/${OUTPUT_DIR}"
 PKG_DIR="${PKG_ROOT}/${PKG_NAME}"
 

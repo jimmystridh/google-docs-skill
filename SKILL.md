@@ -1,5 +1,5 @@
 ---
-name: google-docs-rust
+name: google-docs-skill
 description: Rust implementation of Google Docs, Google Sheets, and Google Drive management with full document operations, spreadsheet editing, and file workflows. Includes Markdown support for headings, bold, italic, lists, tables, and checkboxes plus Drive upload/download/share/search and advanced Sheets operations.
 category: productivity
 version: 2.0.0
@@ -59,7 +59,7 @@ Two install modes are supported:
 
 For source checkouts, validate once before first use:
 ```bash
-cd ~/.claude/skills/google-docs-rust
+cd ~/.claude/skills/google-docs-skill
 cargo check --offline
 ```
 

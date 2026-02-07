@@ -214,7 +214,7 @@ pub fn complete_authorization(
     existing_refresh_token: Option<String>,
 ) -> Result<StoredToken> {
     let client = Client::builder()
-        .user_agent("google-docs-rust/1.0")
+        .user_agent("google-docs-skill/1.0")
         .build()
         .context("Failed building HTTP client")?;
 
@@ -293,7 +293,7 @@ pub fn refresh_token(config: &OAuthClientConfig, token: &mut StoredToken) -> Res
         .ok_or_else(|| anyhow!("Cannot refresh token without refresh_token"))?;
 
     let client = Client::builder()
-        .user_agent("google-docs-rust/1.0")
+        .user_agent("google-docs-skill/1.0")
         .build()
         .context("Failed building HTTP client")?;
 

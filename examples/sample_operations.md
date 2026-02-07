@@ -12,7 +12,7 @@ Practical examples of common Google Docs operations and workflows.
 echo '{
   "title": "Weekly Status Report",
   "content": "# Weekly Status Report\n\n## Accomplishments\n\n- Completed feature implementation\n- Resolved 3 critical bugs\n- Updated documentation\n\n## Next Week\n\n- Begin testing phase\n- Team review meeting"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager create
+}' | scripts/docs_manager create
 ```
 
 **Expected Output**:
@@ -35,7 +35,7 @@ echo '{
 **Objective**: Retrieve full text content of a document
 
 ```bash
-~/.claude/skills/google-docs-rust/scripts/docs_manager read 1abc-xyz-document-123
+scripts/docs_manager read 1abc-xyz-document-123
 ```
 
 **Expected Output**:
@@ -57,7 +57,7 @@ echo '{
 **Objective**: View heading hierarchy for navigation
 
 ```bash
-~/.claude/skills/google-docs-rust/scripts/docs_manager structure 1abc-xyz-document-123
+scripts/docs_manager structure 1abc-xyz-document-123
 ```
 
 **Expected Output**:
@@ -103,7 +103,7 @@ echo '{
   "document_id": "1abc-xyz-document-123",
   "text": "Date: November 10, 2025\n\n",
   "index": 1
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager insert
+}' | scripts/docs_manager insert
 ```
 
 **Result**: Date appears at very beginning, before title
@@ -118,7 +118,7 @@ echo '{
 echo '{
   "document_id": "1abc-xyz-document-123",
   "text": "\n\n## Challenges\n\n- Resource constraints during peak load\n- Integration complexity with legacy system\n\n## Mitigation Plans\n\n- Scale infrastructure proactively\n- Allocate additional developer time"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager append
+}' | scripts/docs_manager append
 ```
 
 **Result**: New sections added to document end
@@ -135,7 +135,7 @@ echo '{
   "find": "Q3 2024",
   "replace": "Q4 2024",
   "match_case": false
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager replace
+}' | scripts/docs_manager replace
 ```
 
 **Expected Output**:
@@ -162,7 +162,7 @@ echo '{
 
 ```bash
 # First, get structure to find title position
-~/.claude/skills/google-docs-rust/scripts/docs_manager structure 1abc-xyz-document-123
+scripts/docs_manager structure 1abc-xyz-document-123
 
 # From output: title is at index 1-22
 
@@ -172,7 +172,7 @@ echo '{
   "start_index": 1,
   "end_index": 22,
   "bold": true
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+}' | scripts/docs_manager format
 ```
 
 **Result**: "Weekly Status Report" appears bold
@@ -185,7 +185,7 @@ echo '{
 
 ```bash
 # Get structure first
-~/.claude/skills/google-docs-rust/scripts/docs_manager structure 1abc-xyz-document-123
+scripts/docs_manager structure 1abc-xyz-document-123
 
 # Format "Accomplishments" (index 24-40)
 echo '{
@@ -194,7 +194,7 @@ echo '{
   "end_index": 40,
   "bold": true,
   "italic": true
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+}' | scripts/docs_manager format
 
 # Format "Next Week" (index 150-160)
 echo '{
@@ -203,7 +203,7 @@ echo '{
   "end_index": 160,
   "bold": true,
   "italic": true
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+}' | scripts/docs_manager format
 ```
 
 **Result**: Both H2 headings have bold + italic styling
@@ -223,7 +223,7 @@ echo '{
   "start_index": 75,
   "end_index": 90,
   "bold": true
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+}' | scripts/docs_manager format
 ```
 
 **Result**: "3 critical bugs" appears bold for emphasis
@@ -241,7 +241,7 @@ echo '{
 echo '{
   "document_id": "1abc-xyz-document-123",
   "index": 500
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager page-break
+}' | scripts/docs_manager page-break
 ```
 
 **Result**: Content after index 500 starts on new page
@@ -258,7 +258,7 @@ echo '{
   "document_id": "1abc-xyz-document-123",
   "start_index": 1000,
   "end_index": 1500
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager delete
+}' | scripts/docs_manager delete
 ```
 
 **Result**: 500 characters removed from document
@@ -275,7 +275,7 @@ echo '{
 # Step 1: Create document
 echo '{
   "title": "Weekly Report - Nov 10, 2025"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager create
+}' | scripts/docs_manager create
 # Returns: {"document_id": "new_doc_abc"}
 
 # Step 2: Add structure
@@ -283,29 +283,29 @@ echo '{
   "document_id": "new_doc_abc",
   "text": "# Weekly Report - Nov 10, 2025\n\n## Summary\n\n[Summary content]\n\n## Detailed Metrics\n\n[Metrics content]\n\n## Next Steps\n\n[Action items]",
   "index": 1
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager insert
+}' | scripts/docs_manager insert
 
 # Step 3: Replace placeholders
 echo '{
   "document_id": "new_doc_abc",
   "find": "[Summary content]",
   "replace": "This week we completed 15 tasks, deployed 2 features, and resolved 8 bugs."
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager replace
+}' | scripts/docs_manager replace
 
 echo '{
   "document_id": "new_doc_abc",
   "find": "[Metrics content]",
   "replace": "- Tasks Completed: 15\n- Features Deployed: 2\n- Bugs Resolved: 8\n- Test Coverage: 87%"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager replace
+}' | scripts/docs_manager replace
 
 echo '{
   "document_id": "new_doc_abc",
   "find": "[Action items]",
   "replace": "- Complete integration testing\n- Prepare for stakeholder demo\n- Update project documentation"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager replace
+}' | scripts/docs_manager replace
 
 # Step 4: Format headings (get structure first)
-~/.claude/skills/google-docs-rust/scripts/docs_manager structure new_doc_abc
+scripts/docs_manager structure new_doc_abc
 
 # Step 5: Format main title (bold)
 echo '{
@@ -313,7 +313,7 @@ echo '{
   "start_index": 1,
   "end_index": 30,
   "bold": true
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+}' | scripts/docs_manager format
 
 # Step 6: Format section headings (bold + italic)
 # Repeat for each section heading from structure output
@@ -329,34 +329,34 @@ echo '{
 
 ```bash
 # Step 1: Read current state
-~/.claude/skills/google-docs-rust/scripts/docs_manager read proposal_doc_123 > current_state.json
+scripts/docs_manager read proposal_doc_123 > current_state.json
 
 # Step 2: Update all dates
 echo '{
   "document_id": "proposal_doc_123",
   "find": "2024",
   "replace": "2025"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager replace
+}' | scripts/docs_manager replace
 
 # Step 3: Update budget section
 echo '{
   "document_id": "proposal_doc_123",
   "find": "Budget: $50,000",
   "replace": "Budget: $65,000"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager replace
+}' | scripts/docs_manager replace
 
 # Step 4: Add new section
 echo '{
   "document_id": "proposal_doc_123",
   "text": "\n\n## Risk Assessment\n\n### Technical Risks\n\n- Infrastructure scalability\n- Third-party API dependencies\n\n### Mitigation Strategies\n\n- Load testing before launch\n- Fallback mechanisms for APIs"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager append
+}' | scripts/docs_manager append
 
 # Step 5: Insert page break before appendix
 # (Assume appendix starts at index 5000)
 echo '{
   "document_id": "proposal_doc_123",
   "index": 5000
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager page-break
+}' | scripts/docs_manager page-break
 
 # Step 6: Format new section heading
 echo '{
@@ -364,7 +364,7 @@ echo '{
   "start_index": 5010,
   "end_index": 5030,
   "bold": true
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+}' | scripts/docs_manager format
 ```
 
 **Result**: Updated proposal with new content and formatting
@@ -384,14 +384,14 @@ create_from_template() {
   # Create base document
   doc_id=$(echo '{
     "title": "Project Proposal - '"$client_name"' - '"$project_name"'"
-  }' | ~/.claude/skills/google-docs-rust/scripts/docs_manager create | jq -r '.document_id')
+  }' | scripts/docs_manager create | jq -r '.document_id')
 
   # Add template content
   echo '{
     "document_id": "'"$doc_id"'",
     "text": "# Project Proposal\n\n**Client**: '"$client_name"'\n**Project**: '"$project_name"'\n\n## Executive Summary\n\n[To be completed]\n\n## Scope of Work\n\n[To be completed]\n\n## Timeline\n\n[To be completed]\n\n## Budget\n\n[To be completed]",
     "index": 1
-  }' | ~/.claude/skills/google-docs-rust/scripts/docs_manager insert
+  }' | scripts/docs_manager insert
 
   # Format title
   echo '{
@@ -399,7 +399,7 @@ create_from_template() {
     "start_index": 1,
     "end_index": 20,
     "bold": true
-  }' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+  }' | scripts/docs_manager format
 
   echo "Created document: $doc_id"
 }
@@ -424,13 +424,13 @@ create_from_template "Enterprise Inc" "Data Migration"
 # Step 1: Create document
 doc_id=$(echo '{
   "title": "Team Meeting Notes - Nov 10"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager create | jq -r '.document_id')
+}' | scripts/docs_manager create | jq -r '.document_id')
 
 # Step 2: Add meeting content
 echo '{
   "document_id": "'"$doc_id"'",
   "text": "# Team Meeting Notes\n\n**Date**: November 10, 2025\n**Attendees**: Team Members\n\n## Discussion Topics\n\n1. Project status\n2. Upcoming deadlines\n3. Resource allocation\n\n## Action Items\n\n- [ ] Complete testing by Friday\n- [ ] Update documentation\n- [ ] Schedule follow-up"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager insert
+}' | scripts/docs_manager insert
 
 # Step 3: Format headings
 echo '{
@@ -438,21 +438,21 @@ echo '{
   "start_index": 1,
   "end_index": 20,
   "bold": true
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+}' | scripts/docs_manager format
 
 # Step 4: Move to team folder using Drive skill
-~/.claude/skills/google-docs-rust/scripts/drive_manager move \
+scripts/drive_manager move \
   --file-id "$doc_id" \
   --folder-id "team_folder_id_xyz"
 
 # Step 5: Share with team
-~/.claude/skills/google-docs-rust/scripts/drive_manager share \
+scripts/drive_manager share \
   --file-id "$doc_id" \
   --email team@company.com \
   --role writer
 
 # Step 6: Generate PDF for archive
-~/.claude/skills/google-docs-rust/scripts/drive_manager download \
+scripts/drive_manager download \
   --file-id "$doc_id" \
   --output "meeting_notes_nov10.pdf"
 ```
@@ -469,10 +469,10 @@ echo '{
 
 ```bash
 # Step 1: Read document to see current state
-~/.claude/skills/google-docs-rust/scripts/docs_manager read doc_abc_123
+scripts/docs_manager read doc_abc_123
 
 # Step 2: Get structure for reference points
-~/.claude/skills/google-docs-rust/scripts/docs_manager structure doc_abc_123
+scripts/docs_manager structure doc_abc_123
 
 # Step 3: Manually count characters to target
 # From read output: "# Title\n\nContent here"
@@ -486,7 +486,7 @@ echo '{
   "start_index": 1,
   "end_index": 7,
   "bold": true
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+}' | scripts/docs_manager format
 ```
 
 **Result**: Correct index range identified and applied
@@ -499,14 +499,14 @@ echo '{
 
 ```bash
 # Step 1: Backup current state
-~/.claude/skills/google-docs-rust/scripts/docs_manager read doc_abc_123 > backup.json
+scripts/docs_manager read doc_abc_123 > backup.json
 
 # Step 2: First update with verification
 echo '{
   "document_id": "doc_abc_123",
   "find": "Phase 1",
   "replace": "Phase 2"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager replace
+}' | scripts/docs_manager replace
 # Check output: {"occurrences": 3}
 
 # Step 3: Second update with verification
@@ -514,11 +514,11 @@ echo '{
   "document_id": "doc_abc_123",
   "find": "January",
   "replace": "February"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager replace
+}' | scripts/docs_manager replace
 # Check output: {"occurrences": 5}
 
 # Step 4: Verify final state
-~/.claude/skills/google-docs-rust/scripts/docs_manager read doc_abc_123
+scripts/docs_manager read doc_abc_123
 
 # Step 5: If needed, restore from backup
 # (Manual process or use delete + insert operations)
@@ -540,7 +540,7 @@ echo '{
   "document_id": "doc_abc_123",
   "find": "old_term",
   "replace": "new_term"
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager replace
+}' | scripts/docs_manager replace
 
 # Single API call replaces all occurrences
 # More efficient than:
@@ -559,15 +559,15 @@ echo '{
 
 ```bash
 # Bad approach: Multiple reads
-~/.claude/skills/google-docs-rust/scripts/docs_manager read doc_abc
+scripts/docs_manager read doc_abc
 # ... format operation ...
-~/.claude/skills/google-docs-rust/scripts/docs_manager read doc_abc
+scripts/docs_manager read doc_abc
 # ... another format operation ...
-~/.claude/skills/google-docs-rust/scripts/docs_manager read doc_abc
+scripts/docs_manager read doc_abc
 
 # Good approach: Single read, multiple operations
-~/.claude/skills/google-docs-rust/scripts/docs_manager read doc_abc > state.json
-~/.claude/skills/google-docs-rust/scripts/docs_manager structure doc_abc > structure.json
+scripts/docs_manager read doc_abc > state.json
+scripts/docs_manager structure doc_abc > structure.json
 
 # Plan all operations from cached data
 # Execute all format operations sequentially
@@ -586,7 +586,7 @@ echo '{
 
 ```bash
 # Step 1: Get structure
-~/.claude/skills/google-docs-rust/scripts/docs_manager structure doc_abc
+scripts/docs_manager structure doc_abc
 # Heading at index 100-110
 
 # Step 2: Insert text at index 50
@@ -594,7 +594,7 @@ echo '{
   "document_id": "doc_abc",
   "text": "New text (30 chars)\n\n",
   "index": 50
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager insert
+}' | scripts/docs_manager insert
 
 # Step 3: WRONG - heading now at 130-140, not 100-110
 # Must recalculate: 100 + 30 = 130
@@ -605,7 +605,7 @@ echo '{
   "start_index": 130,
   "end_index": 140,
   "bold": true
-}' | ~/.claude/skills/google-docs-rust/scripts/docs_manager format
+}' | scripts/docs_manager format
 ```
 
 **Solution**: Recalculate indices after insertions

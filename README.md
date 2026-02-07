@@ -1,6 +1,6 @@
-# Google Docs Skill (Rust Port)
+# Google Docs Skill
 
-Rust port of the original Google Docs/Drive/Sheets skill with the same command surface and JSON output patterns.
+Manage Google Docs, Google Drive, and Google Sheets via three CLIs with JSON-friendly input/output.
 
 ## What is included
 
@@ -53,22 +53,22 @@ scripts/sheets_manager.rb --help
 Release archives include prebuilt binaries and runnable wrappers, so you do not need Rust/Cargo installed.
 
 1. Download the archive matching your platform from GitHub Releases.
-2. Extract it (it contains a single directory named `google-docs-rust-<version>-<target>/`).
+2. Extract it (it contains a single directory named `google-docs-skill-<version>-<target>/`).
 3. Run the wrappers from inside that directory.
 
 macOS/Linux example:
 
 ```bash
-tar -xzf google-docs-rust-vX.Y.Z-aarch64-apple-darwin.tar.gz
-cd google-docs-rust-vX.Y.Z-aarch64-apple-darwin
+tar -xzf google-docs-skill-vX.Y.Z-aarch64-apple-darwin.tar.gz
+cd google-docs-skill-vX.Y.Z-aarch64-apple-darwin
 scripts/drive_manager --help
 ```
 
 Windows example (PowerShell):
 
 ```powershell
-Expand-Archive .\\google-docs-rust-vX.Y.Z-x86_64-pc-windows-msvc.zip -DestinationPath .
-cd .\\google-docs-rust-vX.Y.Z-x86_64-pc-windows-msvc
+Expand-Archive .\\google-docs-skill-vX.Y.Z-x86_64-pc-windows-msvc.zip -DestinationPath .
+cd .\\google-docs-skill-vX.Y.Z-x86_64-pc-windows-msvc
 .\\scripts\\drive_manager.cmd --help
 ```
 
@@ -77,13 +77,13 @@ cd .\\google-docs-rust-vX.Y.Z-x86_64-pc-windows-msvc
 Install directly from GitHub with the community `skills` CLI:
 
 ```bash
-npx skills add jimmystridh/google-docs-rust --skill google-docs-rust -g -a claude-code -y
+npx skills add jimmystridh/google-docs-skill --skill google-docs-skill -g -a claude-code -y
 ```
 
 Repository URL also works:
 
 ```bash
-npx skills add https://github.com/jimmystridh/google-docs-rust --skill google-docs-rust -g -a claude-code -y
+npx skills add https://github.com/jimmystridh/google-docs-skill --skill google-docs-skill -g -a claude-code -y
 ```
 
 ## Auth setup
@@ -123,7 +123,7 @@ Note: For convenience across related Google skills, the authorization URL reques
 
 ## Validation
 
-This port was validated with:
+Validated with:
 
 ```bash
 cargo check --offline

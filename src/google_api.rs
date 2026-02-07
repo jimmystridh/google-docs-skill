@@ -28,7 +28,7 @@ pub enum GoogleApiError {
 impl GoogleClient {
     pub fn new(access_token: impl Into<String>) -> Result<Self> {
         let http = Client::builder()
-            .user_agent("google-docs-rust/1.0")
+            .user_agent("google-docs-skill/1.0")
             .build()
             .context("Failed building HTTP client")?;
         Ok(Self {
