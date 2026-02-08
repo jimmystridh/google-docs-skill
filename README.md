@@ -1,6 +1,6 @@
 # Google Docs Skill (Rust)
 
-A Claude Code skill for managing Google Docs, Google Sheets, and Google Drive. Zero-dependency native binaries — no Ruby, Python, or Node.js runtime needed.
+An [agent skill](https://agentskills.io) for managing Google Docs, Google Sheets, and Google Drive. Zero-dependency native binaries — no Ruby, Python, or Node.js runtime needed.
 
 ## Features
 

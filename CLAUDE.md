@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rust CLI toolkit for managing Google Docs, Google Drive, and Google Sheets. Ships as three separate binaries (`docs_manager`, `drive_manager`, `sheets_manager`) that share OAuth credentials and output JSON for agent consumption. Used as a Claude Code skill/plugin.
+Rust CLI toolkit for managing Google Docs, Google Drive, and Google Sheets. Ships as three separate binaries (`docs_manager`, `drive_manager`, `sheets_manager`) that share OAuth credentials and output JSON for agent consumption. Distributed as an [agent skill](https://agentskills.io).
 
 ## Build & Validate
 
